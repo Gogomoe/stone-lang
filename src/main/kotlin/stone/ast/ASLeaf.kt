@@ -1,5 +1,6 @@
-package stone
+package stone.ast
 
+import stone.Token
 import java.lang.UnsupportedOperationException
 
 abstract class ASLeaf : ASTree() {

@@ -1,4 +1,4 @@
-package stone
+package stone.ast
 
 abstract class ASList(private val list: List<ASTree>) : ASTree() {
 

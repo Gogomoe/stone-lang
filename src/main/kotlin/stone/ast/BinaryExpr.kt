@@ -1,4 +1,4 @@
-package stone
+package stone.ast
 
 class BinaryExpr(list: List<ASTree>) : ASList(list) {
 

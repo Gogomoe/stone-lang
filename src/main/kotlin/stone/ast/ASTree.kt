@@ -1,4 +1,4 @@
-package stone
+package stone.ast
 
 
 abstract class ASTree : Iterable<ASTree> {

@@ -1,4 +1,6 @@
-package stone
+package stone.ast
+
+import stone.Token
 
 class Name(override val token: Token) : ASLeaf() {
 
