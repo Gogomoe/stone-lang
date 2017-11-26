@@ -1,6 +1,6 @@
 package stone.ast
 
-abstract class ASList(private val list: List<ASTree>) : ASTree() {
+abstract class ASTList(private val list: List<ASTree>) : ASTree() {
 
     override val size: Int = list.size
 

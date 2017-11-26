@@ -24,6 +24,7 @@ class Lexer(val r: Reader) {
     fun read(): Token = if (fileQueue(0)) tokens.removeAt(0) else Token.EOF
     fun peek(i: Int): Token = if (fileQueue(i)) tokens[i] else Token.EOF
 
+    @Throws(ParseException::class)
     private fun fileQueue(i: Int): Boolean {
         while (i >= tokens.size) {
             if (hasMore) {
@@ -35,6 +36,7 @@ class Lexer(val r: Reader) {
         return true
     }
 
+    @Throws(ParseException::class)
     private fun readLine() {
         val line = reader.readLine()
         if (line == null) {

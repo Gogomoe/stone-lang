@@ -3,9 +3,7 @@ package stone.ast
 import stone.Token
 import java.lang.UnsupportedOperationException
 
-abstract class ASLeaf : ASTree() {
-
-    abstract val token: Token
+open class ASTLeaf(open val token: Token) : ASTree() {
 
     override val location: String
         get() = "line: ${token.lineNumber}"
@@ -15,6 +13,5 @@ abstract class ASLeaf : ASTree() {
     override fun get(i: Int) = throw UnsupportedOperationException()
 
     override fun children(): Iterator<ASTree> = emptySequence<ASTree>().iterator()
-
 
 }
