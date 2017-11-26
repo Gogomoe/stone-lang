@@ -19,6 +19,7 @@ sealed class Token(val lineNumber: Int) {
 
 
     companion object {
+        @JvmField
         val EOL = "\\n"
     }
 

@@ -59,7 +59,7 @@ class CodeDialog : Reader() {
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 return BufferedReader(FileReader(chooser.selectedFile))
             } else {
-                throw FileNotFoundException()
+                throw FileNotFoundException("File not found")
             }
         }
     }
