@@ -16,31 +16,53 @@ import stone.ast.WhileStmnt
 import java.util.HashSet
 
 class BasicParser {
-    internal var reserved = HashSet<String>()
-    internal var operators = Operators()
-    internal var exprO = rule()
+    val reserved = HashSet<String>()
+    val operators = Operators()
 
-    internal var primary = rule(PrimaryExpr::class.java).or(
+    val exprO = rule()
+    val statementO = rule()
+
+
+    val primary = rule(PrimaryExpr::class.java).or(
             rule().sep("(").ast(exprO).sep(")"),
             rule().number(NumberLiteral::class.java),
             rule().identifier(Name::class.java, reserved),
             rule().string(StringLiteral::class.java)
     )
-    internal var factor = rule().or(
+    val factor = rule().or(
             rule(NegativeExpr::class.java).sep("-").ast(primary),
             primary
     )
-    internal var expr = exprO.expression(BinaryExpr::class.java, factor, operators)
-    internal var statementO = rule()
-    internal var block = rule(BlockStmnt::class.java).sep("{").option(statementO).repeat(rule().sep(";", Token.EOL).option(statementO)).sep("}")
+    val expr = exprO.expression(BinaryExpr::class.java, factor, operators)
 
-    internal var simple = rule(PrimaryExpr::class.java).ast(expr)
+    val block = rule(BlockStmnt::class.java)
+            .sep("{")
+            .option(statementO)
+            .repeat(
+                    rule().sep(";", Token.EOL).option(statementO)
+            )
+            .sep("}")
 
-    internal var statement = statementO.or(
-            rule(IfStmnt::class.java).sep("if").ast(expr).ast(block).option(rule().sep("else").ast(block)),
-            rule(WhileStmnt::class.java).sep("while").ast(expr).ast(block), simple
+    val simple = rule(PrimaryExpr::class.java).ast(expr)
+
+    val statement = statementO.or(
+            rule(IfStmnt::class.java)
+                    .sep("if")
+                    .ast(expr)
+                    .ast(block)
+                    .option(
+                            rule().sep("else").ast(block)
+                    ),
+            rule(WhileStmnt::class.java)
+                    .sep("while")
+                    .ast(expr)
+                    .ast(block),
+            simple
     )
-    internal var program = rule().or(statement, rule(NullStmnt::class.java)).sep(";", Token.EOL)
+    val program = rule().or(
+            statement,
+            rule(NullStmnt::class.java)
+    ).sep(";", Token.EOL)
 
     init {
         reserved.add(";")

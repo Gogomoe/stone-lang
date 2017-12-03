@@ -4,6 +4,8 @@ import stone.Token
 
 class StringLiteral(t: Token) : ASTLeaf(t) {
 
-    fun value(): String = token.text
+    val value: String = token.text
+
+    override fun toString(): String = "<String $value>"
 
 }

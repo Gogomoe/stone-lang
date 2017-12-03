@@ -109,8 +109,9 @@ class Parser {
         internal abstract fun test(t: Token): Boolean
     }
 
-    internal class IdToken internal constructor(type: Class<out ASTLeaf>, r: HashSet<String>?) : AToken(type) {
-        private var reserved: HashSet<String> = r ?: HashSet()
+    internal class IdToken internal constructor(
+            type: Class<out ASTLeaf>,
+            private val reserved: Set<String> = emptySet()) : AToken(type) {
 
         override fun test(t: Token): Boolean {
             return t.isIdentifier && !reserved.contains(t.text)
@@ -258,6 +259,8 @@ class Parser {
 
         companion object {
 
+            val factoryName = "create"
+
             internal fun getForASTList(clazz: Class<out ASTree>?): Factory {
                 var f = get(clazz, List::class.java)
                 if (f == null)
@@ -280,7 +283,7 @@ class Parser {
                     return null
                 try {
 
-                    val m = clazz.getMethod(factoryName, *arrayOf(argType))
+                    val m = clazz.getMethod(factoryName, argType)
                     return object : Factory() {
                         @Throws(Exception::class)
                         override fun makeO(arg: Any): ASTree {
@@ -309,7 +312,6 @@ class Parser {
     }
 
     companion object {
-        val factoryName = "create"
 
         @JvmStatic
         fun rule(clazz: Class<out ASTree>): Parser {
@@ -334,7 +336,7 @@ class Parser {
 
     @Throws(ParseException::class)
     fun parse(lexer: Lexer): ASTree {
-        val results = ArrayList<ASTree>()
+        val results = mutableListOf<ASTree>()
         for (e in elements)
             e.parse(lexer, results)
         return factory.make(results)
@@ -351,12 +353,12 @@ class Parser {
     }
 
     fun reset(): Parser {
-        elements = ArrayList()
+        elements = mutableListOf()
         return this
     }
 
     fun reset(clazz: Class<out ASTree>?): Parser {
-        elements = ArrayList()
+        elements = mutableListOf()
         factory = Factory.getForASTList(clazz)
         return this
     }
@@ -379,15 +381,13 @@ class Parser {
     }
 
     fun token(vararg pat: String): Parser {
-        val strs = mutableListOf<String>()
-        strs.addAll(pat)
+        val strs = listOf(*pat)
         elements.add(Leaf(strs.toTypedArray()))
         return this
     }
 
     fun sep(vararg pat: String): Parser {
-        val strs = mutableListOf<String>()
-        strs.addAll(pat)
+        val strs = listOf(*pat)
         elements.add(Skip(strs.toTypedArray()))
         return this
     }
@@ -398,8 +398,7 @@ class Parser {
     }
 
     fun or(vararg p: Parser): Parser {
-        val ps = mutableListOf<Parser>()
-        ps.addAll(p)
+        val ps = listOf(*p)
         elements.add(OrTree(ps.toTypedArray()))
         return this
     }

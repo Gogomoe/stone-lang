@@ -8,6 +8,7 @@ import java.io.Reader
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 import javax.swing.JScrollPane
+import javax.swing.UIManager
 
 class CodeDialog : Reader() {
 
@@ -54,6 +55,11 @@ class CodeDialog : Reader() {
     override fun close() {}
 
     companion object {
+
+        init {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+
         fun file(): Reader {
             val chooser = JFileChooser()
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
